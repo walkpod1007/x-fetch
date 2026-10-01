@@ -44,6 +44,8 @@
    bash x-fetch.sh 'https://x.com/<帳號>/status/<編號>'
    ```
 
+   Windows 沒有 bash，直接用 Python 跑：`python x_fetch.py --help`、`python x_fetch.py "https://x.com/<帳號>/status/<編號>"`（Windows 10、Python 3.12 實測過）。影片逐字稿在 Windows 跑不了，要另換轉錄工具（見「限制」）。
+
 要當 Claude Code 技能用：把整個 `x-fetch/` 資料夾放進 `~/.claude/skills/`，然後對 Claude 說「幫我抓這則推文 <網址>」。
 
 ## 用法
@@ -172,4 +174,4 @@ MIT，見 `LICENSE`。
 
 **x-fetch** takes an X (Twitter) post URL and saves the post text, X Articles (long-form), original-size images, videos and a sample of replies into a folder. It can also OCR images (tesseract) and transcribe videos (mlx-whisper, Apple Silicon only, opt-in with `--transcript`, downloads a ~1.6 GB model on first use). No login, no cookies: it reads through the community-run FxEmbed (`api.fxtwitter.com`) and vxtwitter services, so it breaks whenever those services or X change. Replies are only a sample, never the full thread.
 
-Requires Python 3.9+ (standard library only). Usage: `bash x-fetch.sh 'https://x.com/<user>/status/<id>'`. Exit codes: 0 ok, 1 partial/degraded, 2 post not found, 3 bad arguments. Read `REPORT.md` first. One post at a time, slowly; for bulk or commercial use, use the official X API. Fetched content belongs to its authors; please follow X's Terms of Service. Special thanks to Ba-Che ([@WizerdBaChe](https://github.com/WizerdBaChe)), whose [media-fetch-pipeline](https://github.com/WizerdBaChe/media-fetch-pipeline) and notes pointed us to this approach in the first place, and to [dangeredwolf](https://github.com/dangeredwolf) and the FxEmbed contributors, and [dylanpdx](https://github.com/dylanpdx) (BetterTwitFix), whose services do the real work. See the upstream credits table above (FxEmbed MIT, BetterTwitFix WTFPL, FFmpeg LGPL/GPL, Tesseract Apache-2.0, mlx-whisper MIT, OpenAI Whisper MIT). Licensed under MIT.
+Requires Python 3.9+ (standard library only). Usage: `bash x-fetch.sh 'https://x.com/<user>/status/<id>'` (on Windows: `python x_fetch.py "<url>"`). Exit codes: 0 ok, 1 partial/degraded, 2 post not found, 3 bad arguments. Read `REPORT.md` first. One post at a time, slowly; for bulk or commercial use, use the official X API. Fetched content belongs to its authors; please follow X's Terms of Service. Special thanks to Ba-Che ([@WizerdBaChe](https://github.com/WizerdBaChe)), whose [media-fetch-pipeline](https://github.com/WizerdBaChe/media-fetch-pipeline) and notes pointed us to this approach in the first place, and to [dangeredwolf](https://github.com/dangeredwolf) and the FxEmbed contributors, and [dylanpdx](https://github.com/dylanpdx) (BetterTwitFix), whose services do the real work. See the upstream credits table above (FxEmbed MIT, BetterTwitFix WTFPL, FFmpeg LGPL/GPL, Tesseract Apache-2.0, mlx-whisper MIT, OpenAI Whisper MIT). Licensed under MIT.

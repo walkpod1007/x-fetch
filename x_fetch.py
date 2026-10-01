@@ -41,7 +41,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 
 def _env_int(name, default):
@@ -144,18 +144,26 @@ def signame(signum):
 
 # ───────────────────────── 子行程（一律自成行程群組，中斷時整群收掉）─────────────────────────
 def kill_group(p, grace=3.0):
-    """先 SIGTERM 整個行程群組（讓 bash trap 有機會收自己的 Chrome），等 grace 秒，還在就 SIGKILL。"""
+    """先 SIGTERM 整個行程群組（讓 bash trap 有機會收自己的 Chrome），等 grace 秒，還在就 SIGKILL。
+    Windows 沒有 os.killpg／SIGKILL：改對子行程本身 terminate()，等 grace 秒再 kill()。"""
+    has_pg = hasattr(os, "killpg") and hasattr(signal, "SIGKILL")
     try:
-        os.killpg(p.pid, signal.SIGTERM)
-    except (ProcessLookupError, PermissionError):
+        if has_pg:
+            os.killpg(p.pid, signal.SIGTERM)
+        else:
+            p.terminate()
+    except (ProcessLookupError, PermissionError, OSError):
         pass
     try:
         p.wait(timeout=grace)
     except subprocess.TimeoutExpired:
         pass
     try:
-        os.killpg(p.pid, signal.SIGKILL)
-    except (ProcessLookupError, PermissionError):
+        if has_pg:
+            os.killpg(p.pid, signal.SIGKILL)
+        else:
+            p.kill()
+    except (ProcessLookupError, PermissionError, OSError):
         pass
     try:
         p.wait(timeout=5)
@@ -194,7 +202,7 @@ def sweep_by_path(path):
         pid_s, _, cmd = ln.strip().partition(" ")
         if pid_s.isdigit() and int(pid_s) != os.getpid() and path in cmd:
             try:
-                os.kill(int(pid_s), signal.SIGKILL)
+                os.kill(int(pid_s), getattr(signal, "SIGKILL", signal.SIGTERM))
                 n += 1
             except OSError:
                 pass

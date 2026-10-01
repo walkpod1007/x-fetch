@@ -1,6 +1,6 @@
 ---
 name: x-fetch
-version: "1.0.0"
+version: "1.0.1"
 allowed-tools: Bash, Read
 description: "貼 X（Twitter）連結，抓貼文、長文（X Articles）、圖片、影片，並做圖片 OCR、影片逐字稿、留言表。觸發：抓這則推文、X 長文全文、X 影片逐字稿、推文留言、下載 X 的圖片。不觸發：只要把連結存進筆記、要登入才看得到的內容、批次爬取。"
 ---
