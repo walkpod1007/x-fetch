@@ -128,7 +128,7 @@ def _on_signal(signum, _frame):
 
 
 def install_signals():
-    for s in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+    for s in tuple(x for x in (getattr(signal, "SIGINT", None), getattr(signal, "SIGTERM", None), getattr(signal, "SIGHUP", None)) if x is not None):
         try:
             signal.signal(s, _on_signal)
         except (ValueError, OSError):
